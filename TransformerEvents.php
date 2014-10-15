@@ -167,4 +167,3 @@ class TransformerEvents implements EnumInterface
    */
   const OBJECT_RETURN_INSTANCE = 'enm.transformer.event.object.return_instance';
 }
- 

@@ -251,4 +251,3 @@ class EnmClassBuilder
     return ucfirst($key);
   }
 }
- 

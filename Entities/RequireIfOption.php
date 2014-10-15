@@ -68,4 +68,3 @@ class RequireIfOption
     return $this->or;
   }
 }
- 

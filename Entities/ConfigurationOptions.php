@@ -584,5 +584,3 @@ class ConfigurationOptions implements ConfigurationOptionInterface
     return $this;
   }
 }
-
- 

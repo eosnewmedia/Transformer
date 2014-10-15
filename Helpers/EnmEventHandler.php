@@ -188,4 +188,3 @@ class EnmEventHandler
     return $this;
   }
 }
- 

@@ -833,4 +833,3 @@ abstract class BaseTransformer
     return $this->classBuilder->build('\stdClass', $return_configuration, $return_properties);
   }
 }
- 

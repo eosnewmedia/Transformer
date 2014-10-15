@@ -363,4 +363,3 @@ class EnmConfigurator
     $options->setMin($config['options']['length']['min']);
   }
 }
- 
