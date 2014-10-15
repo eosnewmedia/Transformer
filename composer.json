@@ -1,0 +1,53 @@
+{
+  "name":              "enm/transformer",
+  "description":       "This library can be used for transforming an array, an object or a json-string into a needed array, object or json-string and validating the values and the schema against a configuration array.",
+  "keywords":          [
+    "api",
+    "serialisation",
+    "json",
+    "validation",
+    "transformer",
+    "converter",
+    "library",
+    "array",
+    "object"
+  ],
+  "homepage":          "http://www.eosnewmedia.de",
+  "type":              "library",
+  "support":           {
+    "issues": "https://github.com/eosnewmedia/Transformer/issues"
+  },
+  "license":           "MIT",
+  "authors":           [
+    {
+      "name":  "Philipp Marien",
+      "email": "marien@eosnewmedia.de",
+      "role":  "Developer"
+    },
+    {
+      "name":  "Alexander Bogomolov",
+      "email": "bogomolov@eosnewmedia.de",
+      "role":  "Developer"
+    },
+    {
+      "name":     "eos new media GmbH & Co. KG",
+      "email":    "info@eosnewmedia.de",
+      "homepage": "http://www.eosnewmedia.de"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require":           {
+    "php":                          ">=5.5",
+    "symfony/config":               ">=2.5",
+    "symfony/dependency-injection": ">=2.5",
+    "symfony/event-dispatcher":     ">=2.5",
+    "symfony/http-kernel":          ">=2.5",
+    "symfony/validator":            ">=2.5",
+    "phpunit/phpunit":              ">=4.0"
+  },
+  "autoload":          {
+    "psr-4": {
+      "Enm\\Transformer\\": ""
+    }
+  }
+}
