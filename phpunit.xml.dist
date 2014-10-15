@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="./Tests/bootstrap.php" colors="true">
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
 
-    <testsuites>
-        <testsuite name="EnmTransformerBundle test suite">
-            <directory suffix="Test.php">./Tests</directory>
-        </testsuite>
-    </testsuites>
+  <testsuites>
+    <testsuite name="EnmTransformer Test Suite">
+      <directory suffix="Test.php">tests/Transformer/</directory>
+    </testsuite>
+  </testsuites>
 
-    <filter>
-        <whitelist>
-            <directory>./</directory>
-            <exclude>
-                <directory>./Tests</directory>
-                <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+  <filter>
+    <whitelist>
+      <directory suffix=".php">src/Transformer/</directory>
+    </whitelist>
+  </filter>
 </phpunit>

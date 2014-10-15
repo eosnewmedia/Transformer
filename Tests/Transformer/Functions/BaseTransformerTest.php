@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Enm\Transformer\Tests\Functions;
+namespace Enm\Transformer\Functions;
 
 use Enm\Transformer\Entities\Configuration;
 use Enm\Transformer\Entities\ConfigurationOptions;
@@ -9,7 +9,7 @@ use Enm\Transformer\Entities\Parameter;
 use Enm\Transformer\Exceptions\TransformerException;
 use Enm\Transformer\Helpers\EnmArrayBuilder;
 use Enm\Transformer\Helpers\EnmClassBuilder;
-use Enm\Transformer\Tests\BaseTransformerTestClass;
+use Enm\Transformer\BaseTransformerTestClass;
 
 class BaseTransformerTest extends BaseTransformerTestClass
 {

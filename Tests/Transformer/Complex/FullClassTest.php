@@ -3,7 +3,7 @@
 
 namespace Enm\TransformerBundle\Tests\Complex;
 
-use Enm\Transformer\Tests\Complex\BaseComplex;
+use Enm\Transformer\Complex\BaseComplex;
 
 class FullClassTest extends BaseComplex
 {

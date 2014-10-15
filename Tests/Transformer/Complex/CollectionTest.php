@@ -1,8 +1,8 @@
 <?php
 
-namespace Enm\Transformer\Tests\Complex;
+namespace Enm\Transformer\Complex;
 
-use Enm\Transformer\Tests\BaseTransformerTestClass;
+use Enm\Transformer\BaseTransformerTestClass;
 
 class CollectionTest extends BaseTransformerTestClass
 {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Enm\Transformer\Tests\Complex;
+namespace Enm\Transformer\Complex;
 
 class ReverseTransformTest extends BaseComplex
 {

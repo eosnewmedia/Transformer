@@ -3,7 +3,7 @@
 
 namespace Enm\TransformerBundle\Tests\NonComplex;
 
-use Enm\Transformer\Tests\BaseTransformerTestClass;
+use Enm\Transformer\BaseTransformerTestClass;
 
 class EnumTest extends BaseTransformerTestClass
 {

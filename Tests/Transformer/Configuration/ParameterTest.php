@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Enm\Transformer\Tests\Configuration;
+namespace Enm\Transformer\Configuration;
 
 use Enm\Transformer\Entities\Parameter;
-use Enm\Transformer\Tests\BaseTransformerTestClass;
+use Enm\Transformer\BaseTransformerTestClass;
 
 class ParameterTest extends BaseTransformerTestClass
 {
