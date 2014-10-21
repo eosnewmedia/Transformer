@@ -43,10 +43,10 @@ class EnmNormalizer
         $this->normalizeBoolean($parameter);
         break;
       case TypeEnum::INTEGER_TYPE:
-        $this->normalizeInteger($parameter);
+        $this->normalizeInteger($parameter, $configuration);
         break;
       case TypeEnum::FLOAT_TYPE:
-        $this->normalizeFloat($parameter);
+        $this->normalizeFloat($parameter, $configuration);
         break;
       case TypeEnum::DATE_TYPE:
         $this->normalizeDate($parameter, $configuration);
@@ -79,12 +79,41 @@ class EnmNormalizer
 
 
   /**
+   * @param Parameter     $parameter
+   * @param Configuration $configuration
+   */
+  protected function roundParameterValue(Parameter $parameter, Configuration $configuration)
+  {
+    if ($configuration->getOptions()->getRound() !== null)
+    {
+      $parameter->setValue(
+        round(
+          $parameter->getValue(),
+          $configuration->getOptions()->getRound(),
+          PHP_ROUND_HALF_DOWN
+        )
+      );
+    }
+    elseif ($configuration->getOptions()->isFloor() === true)
+    {
+      $parameter->setValue(floor($parameter->getValue()));
+    }
+    elseif ($configuration->getOptions()->isCeil() === true)
+    {
+      $parameter->setValue(ceil($parameter->getValue()));
+    }
+  }
+
+
+
+  /**
    * @param Parameter $parameter
    */
-  protected function normalizeInteger(Parameter $parameter)
+  protected function normalizeInteger(Parameter $parameter, Configuration $configuration)
   {
     if (is_numeric($parameter->getValue()))
     {
+      $this->roundParameterValue($parameter, $configuration);
       $parameter->setValue(intval($parameter->getValue()));
     }
   }
@@ -94,10 +123,11 @@ class EnmNormalizer
   /**
    * @param Parameter $parameter
    */
-  protected function normalizeFloat(Parameter $parameter)
+  protected function normalizeFloat(Parameter $parameter, Configuration $configuration)
   {
     if (is_numeric($parameter->getValue()))
     {
+      $this->roundParameterValue($parameter, $configuration);
       $parameter->setValue(floatval($parameter->getValue()));
     }
   }

@@ -283,6 +283,8 @@ class EnmConfigurator
     $options = $this->configuration[$key]->getOptions();
     $options->setExpected($config['options']['expected']);
     $options->setRound($config['options']['round']);
+    $options->setFloor($config['options']['floor']);
+    $options->setCeil($config['options']['ceil']);
     if (!is_null($config['options']['min']))
     {
       $options->setMin($config['options']['min']);

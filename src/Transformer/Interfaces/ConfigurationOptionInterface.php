@@ -298,4 +298,36 @@ interface ConfigurationOptionInterface
 
 
   public function setForbiddenIfNotAvailable(array $forbiddenIfNotAvailable);
+
+
+
+  /**
+   * @return boolean
+   */
+  public function isCeil();
+
+
+
+  /**
+   * @param boolean $ceil
+   *
+   * @return $this
+   */
+  public function setCeil($ceil);
+
+
+
+  /**
+   * @return boolean
+   */
+  public function isFloor();
+
+
+
+  /**
+   * @param boolean $floor
+   *
+   * @return $this
+   */
+  public function setFloor($floor);
 }

@@ -295,17 +295,6 @@ class EnmValidator extends EnmBaseValidator
   {
     $this->validateType($configuration);
 
-    if ($configuration->getOptions()->getRound() !== null)
-    {
-      $parameter->setValue(
-        round(
-          $parameter->getValue(),
-          $configuration->getOptions()->getRound(),
-          PHP_ROUND_HALF_DOWN
-        )
-      );
-    }
-
     $this->validateMinMax(
       $configuration->getOptions()->getMin(),
       $configuration->getOptions()->getMax()

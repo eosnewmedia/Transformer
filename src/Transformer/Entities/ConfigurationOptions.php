@@ -67,6 +67,16 @@ class ConfigurationOptions implements ConfigurationOptionInterface
   protected $round = null;
 
   /**
+   * @var bool
+   */
+  protected $floor = false;
+
+  /**
+   * @var bool
+   */
+  protected $ceil = false;
+
+  /**
    * @var array
    */
   protected $options = array();
@@ -580,6 +590,54 @@ class ConfigurationOptions implements ConfigurationOptionInterface
   public function setForbiddenIfNotAvailable(array $forbiddenIfNotAvailable)
   {
     $this->forbiddenIfNotAvailable = $forbiddenIfNotAvailable;
+
+    return $this;
+  }
+
+
+
+  /**
+   * @return boolean
+   */
+  public function isCeil()
+  {
+    return $this->ceil;
+  }
+
+
+
+  /**
+   * @param boolean $ceil
+   *
+   * @return $this
+   */
+  public function setCeil($ceil)
+  {
+    $this->ceil = boolval($ceil);
+
+    return $this;
+  }
+
+
+
+  /**
+   * @return boolean
+   */
+  public function isFloor()
+  {
+    return $this->floor;
+  }
+
+
+
+  /**
+   * @param boolean $floor
+   *
+   * @return $this
+   */
+  public function setFloor($floor)
+  {
+    $this->floor = boolval($floor);
 
     return $this;
   }

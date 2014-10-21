@@ -331,4 +331,61 @@ class OptionsTest extends BaseTransformerTestClass
     $this->expectFailure($config, 'test', '2001:0db8:85a3:08d3:1319:8a2e:0370:7344:4444');
     $this->expectFailure($config, 'test', 'avcbegasjguegadsdfbwndisfdshafdsffdsfsdfsfnehajsdsfffdff');
   }
+
+
+
+  public function testRound()
+  {
+    $config = array(
+      'test' => [
+        'type'    => 'float',
+        'options' => [
+          'round' => 2
+        ]
+      ]
+    );
+    $this->assertEquals(
+      5.23,
+      $this->getTransformer()->transform('stdClass', $config, array('test' => 5.234))->test
+    );
+    $this->exceptionWithNegativeIntegerTest($config, 'test');
+  }
+
+
+
+  public function testFloor()
+  {
+    $config = array(
+      'test' => [
+        'type'    => 'float',
+        'options' => [
+          'floor' => true
+        ]
+      ]
+    );
+    $this->assertEquals(
+      5,
+      $this->getTransformer()->transform('stdClass', $config, array('test' => 5.234))->test
+    );
+    $this->exceptionWithNegativeIntegerTest($config, 'test');
+  }
+
+
+
+  public function testCeil()
+  {
+    $config = array(
+      'test' => [
+        'type'    => 'float',
+        'options' => [
+          'ceil' => true
+        ]
+      ]
+    );
+    $this->assertEquals(
+      6,
+      $this->getTransformer()->transform('stdClass', $config, array('test' => 5.234))->test
+    );
+    $this->exceptionWithNegativeIntegerTest($config, 'test');
+  }
 }
