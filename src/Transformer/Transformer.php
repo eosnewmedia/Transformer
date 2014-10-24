@@ -83,11 +83,12 @@ class Transformer extends BaseTransformer implements TransformerInterface
    *
    * @param mixed  $value
    * @param string $to
+   * @param array  $exclude
    *
    * @return array|object|string
    */
-  public function convert($value, $to)
+  public function convert($value, $to, array $exclude = array())
   {
-    return $this->converter->convertTo($value, $to);
+    return $this->converter->convertTo($value, $to, $exclude);
   }
 }

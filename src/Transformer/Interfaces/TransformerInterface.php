@@ -60,8 +60,9 @@ interface TransformerInterface
    *
    * @param mixed  $value
    * @param string $to
+   * @param array  $exclude
    *
    * @return array|object|string
    */
-  public function convert($value, $to);
+  public function convert($value, $to, array $exclude = array());
 }
