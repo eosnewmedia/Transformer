@@ -164,12 +164,13 @@ class EnmConverter
       case ConversionEnum::ARRAY_CONVERSION:
         return $this->excludeFromObject(json_decode(json_encode($value)), $exclude);
       case ConversionEnum::OBJECT_CONVERSION:
+        $value = $this->excludeFromObject($value, $exclude);
         if ($public === false)
         {
-          return $this->excludeFromObject($value, $exclude);
+          return $value;
         }
 
-        return $this->excludeFromObject($this->objectToPublicObject($value), $exclude);
+        return $this->objectToPublicObject($value);
       case ConversionEnum::STRING_CONVERSION:
         return $this->toObject(json_decode($value), $exclude);
     }
