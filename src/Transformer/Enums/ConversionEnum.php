@@ -17,4 +17,6 @@ class ConversionEnum
   const JSON_CONVERSION = 'json';
 
   const STRING_CONVERSION = 'string';
+
+  const PUBLIC_OBJECT_CONVERSION = 'public';
 }

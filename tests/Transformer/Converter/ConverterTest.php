@@ -77,4 +77,23 @@ class ConverterTest extends BaseTransformerTestClass
       $this->fail($e);
     }
   }
+
+
+
+  public function testConvertToPublic()
+  {
+    try
+    {
+      $object = new ObjectExample(new ObjectExample());
+
+      $std = $this->getTransformer()->convert($object, 'public');
+
+      $this->assertEquals('a', $std->a);
+      $this->assertEquals('a', $std->child->a);
+    }
+    catch (\Exception $e)
+    {
+      $this->fail($e);
+    }
+  }
 }

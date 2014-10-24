@@ -157,14 +157,19 @@ class EnmConverter
    * @return object
    * @throws TransformerException
    */
-  protected function toObject($value, array $exclude)
+  protected function toObject($value, array $exclude, $public = false)
   {
     switch (gettype($value))
     {
       case ConversionEnum::ARRAY_CONVERSION:
         return $this->excludeFromObject(json_decode(json_encode($value)), $exclude);
       case ConversionEnum::OBJECT_CONVERSION:
-        return $this->excludeFromObject($value, $exclude);
+        if ($public === false)
+        {
+          return $this->excludeFromObject($value, $exclude);
+        }
+
+        return $this->excludeFromObject($this->objectToPublicObject($value), $exclude);
       case ConversionEnum::STRING_CONVERSION:
         return $this->toObject(json_decode($value), $exclude);
     }
@@ -245,7 +250,6 @@ class EnmConverter
 
   /**
    * @param       $object
-   * @param array $exclude
    *
    * @return \stdClass|\DateTime
    */
@@ -267,7 +271,7 @@ class EnmConverter
       $value = $property->getValue($object);
       if (is_object($value))
       {
-        $returnClass->$key = $value;
+        $returnClass->$key = $this->objectToPublicObject($value);
       }
       elseif (is_array($value))
       {
@@ -422,7 +426,9 @@ class EnmConverter
       case ConversionEnum::JSON_CONVERSION:
         return $this->toJson($value, $exclude);
       case ConversionEnum::OBJECT_CONVERSION:
-        return $this->toObject($value, $exclude);
+        return $this->toObject($value, $exclude, false);
+      case ConversionEnum::PUBLIC_OBJECT_CONVERSION:
+        return $this->toObject($value, $exclude, true);
       default:
         throw new TransformerException(
           sprintf(
