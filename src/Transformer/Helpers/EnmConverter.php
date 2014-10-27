@@ -103,7 +103,7 @@ class EnmConverter
         return $this->arrayToObject($value, $exclude);
         break;
       case ConversionEnum::STRING_CONVERSION:
-        return (json_decode($value) === null ? $this->fail($value, 'object') : $value);
+        return (json_decode($value) === null ? $this->fail($value, 'object') : json_decode($value));
         break;
     }
 
