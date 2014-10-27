@@ -245,23 +245,23 @@ class EnmConverter
     }
 
     $object_hash = spl_object_hash($value);
-    if (!array_key_exists($object_hash, $this->objects))
+    if (!in_array($object_hash, $this->objects))
     {
       if ($value instanceof \DateTime)
       {
-        $this->objects[$object_hash] = $value;
+        return $value;
       }
       elseif ($value instanceof \stdClass)
       {
-        $this->objects[$object_hash] = $this->arrayToObject((array) $value, $exclude);
+        return $this->arrayToObject((array) $value, $exclude);
       }
       else
       {
-        $this->objects[$object_hash] = $this->preparePublicObject($value, $exclude);
+        return $this->preparePublicObject($value, $exclude);
       }
     }
 
-    return $this->objects[$object_hash];
+    return '__parent:' . $object_hash;
   }
 
 
