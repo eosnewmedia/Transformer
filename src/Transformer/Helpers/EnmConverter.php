@@ -4,7 +4,10 @@
 namespace Enm\Transformer\Helpers;
 
 use Enm\Transformer\Enums\ConversionEnum;
+use Enm\Transformer\Events\ConverterEvent;
 use Enm\Transformer\Exceptions\TransformerException;
+use Enm\Transformer\TransformerEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class EnmConverter
@@ -14,6 +17,20 @@ use Enm\Transformer\Exceptions\TransformerException;
  */
 class EnmConverter
 {
+
+  /**
+   * @var EventDispatcherInterface
+   */
+  protected $dispatcher;
+
+
+
+  public function __construct(EventDispatcherInterface $dispatcher)
+  {
+    $this->dispatcher = $dispatcher;
+  }
+
+
 
   /**
    * @param       $value
@@ -421,14 +438,24 @@ class EnmConverter
     switch (strtolower($result_type))
     {
       case ConversionEnum::ARRAY_CONVERSION:
+        $this->dispatcher->dispatch(TransformerEvents::CONVERT_TO_ARRAY, new ConverterEvent($value, $result_type));
+
         return $this->toArray($value, $exclude);
       case ConversionEnum::STRING_CONVERSION:
+        $this->dispatcher->dispatch(TransformerEvents::CONVERT_TO_STRING, new ConverterEvent($value, $result_type));
+
         return $this->toString($value, $exclude);
       case ConversionEnum::JSON_CONVERSION:
+        $this->dispatcher->dispatch(TransformerEvents::CONVERT_TO_JSON, new ConverterEvent($value, $result_type));
+
         return $this->toJson($value, $exclude);
       case ConversionEnum::OBJECT_CONVERSION:
+        $this->dispatcher->dispatch(TransformerEvents::CONVERT_TO_OBJECT, new ConverterEvent($value, $result_type));
+
         return $this->toObject($value, $exclude, false);
       case ConversionEnum::PUBLIC_OBJECT_CONVERSION:
+        $this->dispatcher->dispatch(TransformerEvents::CONVERT_TO_PUBLIC, new ConverterEvent($value, $result_type));
+
         return $this->toObject($value, $exclude, true);
       default:
         throw new TransformerException(
