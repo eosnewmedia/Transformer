@@ -247,6 +247,7 @@ class EnmConverter
     $object_hash = spl_object_hash($value);
     if (!in_array($object_hash, $this->objects))
     {
+      array_push($this->objects, $object_hash);
       if ($value instanceof \DateTime)
       {
         return $value;
