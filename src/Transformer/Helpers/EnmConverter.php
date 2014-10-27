@@ -261,7 +261,7 @@ class EnmConverter
       }
     }
 
-    return '__parent:' . $object_hash;
+    return $object_hash;
   }
 
 
