@@ -74,4 +74,3 @@ class ConverterEvent extends Event
     return $this;
   }
 }
- 
