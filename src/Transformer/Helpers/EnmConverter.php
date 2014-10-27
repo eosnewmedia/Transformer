@@ -17,170 +17,140 @@ class EnmConverter
 
 
   /**
-   * @param       $value
-   * @param array $exclude
-   *
-   * @return array
-   * @throws TransformerException
+   * @var array
    */
-  protected function toArray($value, array $exclude)
-  {
-    switch (gettype($value))
-    {
-      case ConversionEnum::ARRAY_CONVERSION:
-        return $this->excludeFromArray($value, $exclude);
-      case ConversionEnum::OBJECT_CONVERSION:
-        return $this->excludeFromArray($this->objectToArray($value, $exclude), $exclude);
-      case ConversionEnum::STRING_CONVERSION:
-        return $this->excludeFromArray($this->objectToArray(json_decode($value)), $exclude);
-    }
-    throw new TransformerException(
-      sprintf(
-        'Value of type %s can not be converted to array by this method.',
-        gettype($value)
-      )
-    );
-  }
+  protected $objects = array();
 
 
 
   /**
-   * @param array $array
-   * @param array $exclude
-   *
-   * @return array
-   */
-  protected function excludeFromArray(array $array, array $exclude)
-  {
-    foreach ($exclude as $key => $value)
-    {
-      if (is_array($value) && array_key_exists($key, $array))
-      {
-        $array[$key] = $this->excludeFromArray($array[$key], $value);
-      }
-      elseif (!is_array($value) && array_key_exists($value, $array))
-      {
-        /**
-         * @var string $value
-         */
-        unset($array[$value]);
-      }
-    }
-
-    return $array;
-  }
-
-
-
-  /**
-   * @param object $object
+   * @param mixed  $value
+   * @param string $to
    * @param array  $exclude
    *
-   * @return object
-   */
-  protected function excludeFromObject($object, array $exclude)
-  {
-    $newObject = clone $object;
-
-    if ($object instanceof \stdClass)
-    {
-      return $this->excludeFromStdClass($newObject, $exclude);
-    }
-
-    $reflection = new \ReflectionObject($newObject);
-
-    foreach ($exclude as $key => $value)
-    {
-      if (!is_array($value))
-      {
-        if ($reflection->hasProperty($value))
-        {
-          $reflectionProperty = $reflection->getProperty($value);
-          $reflectionProperty->setAccessible(true);
-          $reflectionProperty->setValue($newObject, null);
-        }
-      }
-      elseif ($reflection->hasProperty($key))
-      {
-        $reflectionProperty = $reflection->getProperty($key);
-        $reflectionProperty->setAccessible(true);
-
-        if (is_object($reflectionProperty->getValue($newObject)))
-        {
-          $reflectionProperty->setValue(
-            $newObject,
-            $this->excludeFromObject($reflectionProperty->getValue($newObject), $value)
-          );
-        }
-      }
-    }
-
-    return $newObject;
-  }
-
-
-
-  /**
-   * @param \stdClass $object
-   * @param array     $exclude
-   *
-   * @return \stdClass
-   */
-  protected function excludeFromStdClass(\stdClass $object, array $exclude)
-  {
-    foreach ($exclude as $key => $value)
-    {
-      if (is_array($value))
-      {
-        if (property_exists($object, $key))
-        {
-          $object->$key = $this->excludeFromObject($object->$key, $value);
-        }
-      }
-      else
-      {
-        if (property_exists($object, $value))
-        {
-          unset($object->$value);
-        }
-      }
-    }
-
-    return $object;
-  }
-
-
-
-  /**
-   * @param       $value
-   * @param array $exclude
-   *
-   * @return object
+   * @return mixed
    * @throws TransformerException
    */
-  protected function toObject($value, array $exclude, $public = false)
+  public function convertTo($value, $to, array $exclude = array())
+  {
+    $this->objects = array();
+    switch (strtolower($to))
+    {
+      case ConversionEnum::ARRAY_CONVERSION:
+        return $this->toArray($value, $exclude);
+        break;
+      case ConversionEnum::JSON_CONVERSION:
+        return $this->toJSON($value, $exclude);
+        break;
+      case ConversionEnum::OBJECT_CONVERSION:
+        return $this->toObject($value, $exclude);
+        break;
+      case ConversionEnum::PUBLIC_OBJECT_CONVERSION:
+        return $this->toObject($value, $exclude, true);
+        break;
+      case ConversionEnum::STRING_CONVERSION:
+        return $this->toString($value, $exclude);
+        break;
+    }
+
+    return $this->fail($value, $to);
+  }
+
+
+
+  /**
+   * @param $value
+   * @param $to
+   *
+   * @return bool
+   * @throws TransformerException
+   */
+  protected function fail($value, $to)
+  {
+    if (true)
+    {
+      throw new TransformerException(
+        sprintf("Value of type %s can not be converted to %s by this method.", gettype($value), $to)
+      );
+    }
+
+    return false;
+  }
+
+
+
+  /**
+   * @param      $value
+   * @param      $exclude
+   * @param bool $public
+   *
+   * @return \stdClass|object
+   * @throws TransformerException
+   */
+  protected function toObject($value, $exclude, $public = false)
   {
     switch (gettype($value))
     {
-      case ConversionEnum::ARRAY_CONVERSION:
-        return $this->excludeFromObject(json_decode(json_encode($value)), $exclude);
       case ConversionEnum::OBJECT_CONVERSION:
-        $value = $this->excludeFromObject($value, $exclude);
         if ($public === false)
         {
           return $value;
         }
 
-        return $this->objectToPublicObject($value);
+        return $this->objectToPublicObject($value, $exclude);
+        break;
+      case ConversionEnum::ARRAY_CONVERSION:
+        return $this->arrayToObject($value, $exclude);
+        break;
       case ConversionEnum::STRING_CONVERSION:
-        return $this->toObject(json_decode($value), $exclude);
+        return (json_decode($value) === null ? $this->fail($value, 'object') : $value);
+        break;
     }
-    throw new TransformerException(
-      sprintf(
-        'Value of type %s can not be converted to object by this method.',
-        gettype($value)
-      )
-    );
+
+    return $this->fail($value, 'object');
+  }
+
+
+
+  protected function toJSON($value, $exclude)
+  {
+    switch (gettype($value))
+    {
+      case ConversionEnum::OBJECT_CONVERSION:
+        return json_encode($this->objectToPublicObject($value, $exclude));
+        break;
+      case ConversionEnum::ARRAY_CONVERSION:
+        return json_encode($this->prepareArray($value, $exclude));
+        break;
+      case ConversionEnum::STRING_CONVERSION:
+
+        return (json_decode($value) === null ? json_encode($value) : $value);
+        break;
+    }
+
+    return $this->fail($value, 'object');
+  }
+
+
+
+  protected function toArray($value, $exclude)
+  {
+    switch (gettype($value))
+    {
+      case ConversionEnum::OBJECT_CONVERSION:
+        return $this->objectToArray($value, $exclude);
+        break;
+      case ConversionEnum::ARRAY_CONVERSION:
+        return $this->prepareArray($value, $exclude);
+        break;
+      case ConversionEnum::STRING_CONVERSION:
+
+        return (json_decode($value) === null ? $this->fail($value, 'array') :
+          $this->prepareArray(json_decode($value, true), $exclude));
+        break;
+    }
+
+    return $this->fail($value, 'array');
   }
 
 
@@ -197,7 +167,7 @@ class EnmConverter
     switch (gettype($value))
     {
       case ConversionEnum::ARRAY_CONVERSION:
-        return $this->excludeFromArray(implode(', ', $value), $exclude);
+        return implode(',', $this->prepareArray($value, $exclude));
       case ConversionEnum::STRING_CONVERSION:
         return $value;
       case ConversionEnum::OBJECT_CONVERSION:
@@ -206,7 +176,6 @@ class EnmConverter
         {
           return $rc->getMethod('__toString')->invoke($value);
         }
-        $value = $this->excludeFromObject($value, $exclude);
 
         return json_encode($this->objectToPublicObject($value));
     }
@@ -220,127 +189,94 @@ class EnmConverter
 
 
 
+  protected function arrayToObject(array $array, array $exclude)
+  {
+    $object = new \stdClass();
+    foreach ($array as $key => $value)
+    {
+      if ($this->exclude($key, $exclude) === false)
+      {
+        $object->$key = $this->prepareArrayValue($value, $this->excludeNext($key, $exclude));
+      }
+    }
+
+    return $object;
+  }
+
+
+
+  /**
+   * @param $object
+   * @param $exclude
+   *
+   * @return array
+   * @throws TransformerException
+   */
+  protected function objectToArray($object, array $exclude)
+  {
+    $array = (array) $this->objectToPublicObject($object, $exclude);
+
+    foreach ($array as $key => $value)
+    {
+      if (is_object($value))
+      {
+        $value = $this->objectToArray($value, $this->excludeNext($key, $exclude));
+      }
+      $array[$key] = $value;
+    }
+
+    return $array;
+  }
+
+
+
   /**
    * @param       $value
    * @param array $exclude
    *
-   * @return string
+   * @return \stdClass || \DateTime
    * @throws TransformerException
    */
-  protected function toJson($value, array $exclude)
+  protected function objectToPublicObject($value, array $exclude = array())
   {
-    switch (gettype($value))
+    if (!is_object($value))
     {
-      case ConversionEnum::ARRAY_CONVERSION:
-        return json_encode($this->excludeFromArray($value, $exclude));
-      case ConversionEnum::STRING_CONVERSION:
-        return json_encode($value);
-      case ConversionEnum::OBJECT_CONVERSION:
-        $value = $this->excludeFromObject($value, $exclude);
-
-        return json_encode($this->objectToPublicObject($value));
-    }
-    throw new TransformerException(
-      sprintf(
-        'Value of type %s can not be converted to JSON by this method.',
-        gettype($value)
-      )
-    );
-  }
-
-
-
-  /**
-   * @param       $object
-   *
-   * @return \stdClass|\DateTime
-   */
-  protected function objectToPublicObject($object)
-  {
-    $returnClass = new \stdClass();
-
-    $reflectionObject  = new \ReflectionObject($object);
-    $object_properties = $this->objectToArray($object);
-    if ($this->shouldBeDateTime($object_properties) === true)
-    {
-      return new \DateTime($object_properties['date']);
+      throw new TransformerException(sprintf('Value has to be an object, %s given.', gettype($value)));
     }
 
-    foreach ($object_properties as $key => $value)
+    $object_hash = spl_object_hash($value);
+    if (!array_key_exists($object_hash, $this->objects))
     {
-      $property = $reflectionObject->getProperty($key);
-      $property->setAccessible(true);
-      $value = $property->getValue($object);
-      if (is_object($value))
+      if ($value instanceof \DateTime)
       {
-        $returnClass->$key = $this->objectToPublicObject($value);
+        $this->objects[$object_hash] = $value;
       }
-      elseif (is_array($value))
+      elseif ($value instanceof \stdClass)
       {
-        $this->prepareArrayForObject($returnClass, $key, $value);
+        $this->objects[$object_hash] = $this->arrayToObject((array) $value, $exclude);
       }
       else
       {
-        $returnClass->$key = $value;
+        $this->objects[$object_hash] = $this->preparePublicObject($value, $exclude);
       }
     }
 
-    return $returnClass;
+    return $this->objects[$object_hash];
   }
 
 
 
   /**
-   * @param \stdClass $stdClass
-   * @param string    $key
-   * @param array     $value
-   */
-  protected function prepareArrayForObject(\stdClass $stdClass, $key, array $value)
-  {
-    $array_keys   = array_keys($value);
-    $array_values = array_values($value);
-    $assoc        = false;
-    foreach ($array_keys as $array_key)
-    {
-      if (!is_numeric($array_key))
-      {
-        $assoc = true;
-        break;
-      }
-    }
-    if ($assoc === true || count($array_values) === 0 || !is_array($array_values[0]))
-    {
-      $stdClass->$key = $value;
-    }
-    else
-    {
-      $collection_array = array();
-      foreach ($value as $sub_value)
-      {
-        array_push($collection_array, $this->objectToPublicObject($sub_value));
-      }
-      $stdClass->$key = $collection_array;
-    }
-  }
-
-
-
-  /**
-   * @param array $value
+   * @param       $key
+   * @param array $exclude
    *
    * @return bool
    */
-  protected function shouldBeDateTime(array $value)
+  protected function exclude($key, array $exclude)
   {
-    if (array_key_exists('date', $value))
+    if (in_array($key, $exclude))
     {
-      if (array_key_exists('timezone_type', $value))
-      {
-        if (array_key_exists('timezone', $value))
-        {
-          return true;
-        }
-      }
+      return true;
     }
 
     return false;
@@ -349,95 +285,115 @@ class EnmConverter
 
 
   /**
-   * @param       $input
+   * @param       $key
    * @param array $exclude
    *
    * @return array
-   * @throws TransformerException
    */
-  protected function objectToArray($input, array $exclude = array())
+  protected function excludeNext($key, array $exclude)
   {
-    if (!in_array(gettype($input), array(ConversionEnum::OBJECT_CONVERSION, ConversionEnum::ARRAY_CONVERSION)))
+    if (array_key_exists($key, $exclude) && is_array($exclude[$key]))
     {
-      throw new TransformerException(
-        sprintf(
-          "Value of type %s can't be converted by this method!",
-          gettype($input)
-        )
-      );
-    }
-    // Rückgabe Array erstellen
-    $final = array();
-
-    if (is_object($input))
-    {
-      $input = $this->excludeFromObject($input, $exclude);
+      return $exclude[$key];
     }
 
-    // Object in Array umwandeln
-    $array = (array) $input;
-
-    foreach ($array as $key => $value)
-    {
-      // Protected und Private Properties des Objektes im Array erreichbar machen
-      if (is_object($input))
-      {
-        // PHP Benennungen vom Konvertieren Rückgängigmachen
-        $key = str_replace("\0*\0", '', $key);
-        $key = str_replace("\0" . get_class($input) . "\0", '', $key);
-
-        // Die Reflection-Klasse wird an dieser Stelle benötigt, da PHP Integer-Werte aus dem Objekt nicht in das Array übernimmts
-        $reflectionClass = new \ReflectionClass(get_class($input));
-        if ($reflectionClass->hasProperty($key))
-        {
-          $property = $reflectionClass->getProperty($key);
-          $property->setAccessible(true);
-          $value = $property->getValue($input);
-        }
-      }
-      // Tiefer verschachtelt?
-      if (is_object($value) || is_array($value))
-      {
-        $value = $this->objectToArray($value);
-      }
-      // Wert ins Array setzen
-      $final[$key] = $value;
-    }
-
-    return $final;
+    return array();
   }
 
 
 
   /**
    * @param       $value
-   * @param       $result_type
    * @param array $exclude
    *
-   * @return mixed
+   * @return \stdClass
    * @throws TransformerException
    */
-  public function convertTo($value, $result_type, array $exclude = array())
+  protected function preparePublicObject($value, array $exclude)
   {
-    switch (strtolower($result_type))
+    $reflection = new \ReflectionObject($value);
+    $properties = $reflection->getProperties();
+
+    $object = new \stdClass();
+
+    foreach ($properties as $property)
     {
-      case ConversionEnum::ARRAY_CONVERSION:
-        return $this->toArray($value, $exclude);
-      case ConversionEnum::STRING_CONVERSION:
-        return $this->toString($value, $exclude);
-      case ConversionEnum::JSON_CONVERSION:
-        return $this->toJson($value, $exclude);
-      case ConversionEnum::OBJECT_CONVERSION:
-        return $this->toObject($value, $exclude, false);
-      case ConversionEnum::PUBLIC_OBJECT_CONVERSION:
-        return $this->toObject($value, $exclude, true);
-      default:
-        throw new TransformerException(
-          sprintf(
-            "The given Value can't be converted to %s by this method!",
-            gettype($result_type)
-          )
-        );
+      $key = $property->getName();
+      if ($this->exclude($key, $exclude) === false)
+      {
+        $property->setAccessible(true);
+        $object->$key = $property->getValue($value);
+
+        if (is_object($object->$key))
+        {
+          $object->$key = $this->objectToPublicObject($object->$key, $this->excludeNext($key, $exclude));
+        }
+        if (is_array($object->$key))
+        {
+          $object->$key = $this->prepareArray($object->$key, $this->excludeNext($key, $exclude));
+        }
+      }
     }
+
+    return $object;
+  }
+
+
+
+  /**
+   * @param array $collection
+   * @param array $exclude
+   *
+   * @return array
+   * @throws TransformerException
+   */
+  protected function prepareArray(array $collection, array $exclude)
+  {
+    foreach ($collection as $key => $value)
+    {
+      if ($this->exclude($key, $exclude) === false)
+      {
+        $collection[$key] = $this->prepareArrayValue($value, $this->excludeNext($key, $exclude));
+      }
+      else
+      {
+        unset($collection[$key]);
+      }
+    }
+
+    return $collection;
+  }
+
+
+
+  /**
+   * @param       $value
+   * @param array $exclude
+   *
+   * @return array|\DateTime|\stdClass
+   * @throws TransformerException
+   */
+  protected function prepareArrayValue($value, array $exclude)
+  {
+    if (is_array($value))
+    {
+      if (array_key_exists('date', $value)
+          && array_key_exists('timezone_type', $value)
+          && array_key_exists('timezone', $value)
+      )
+      {
+
+        return new \DateTime($value['date']);
+      }
+
+      return $this->prepareArray($value, $exclude);
+    }
+    elseif (is_object($value))
+    {
+
+      return $this->objectToPublicObject($value, $exclude);
+    }
+
+    return $value;
   }
 }
