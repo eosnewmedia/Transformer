@@ -166,29 +166,4 @@ class TransformerEvents implements EnumInterface
    * Throws \Enm\Transformer\Event\ClassBuilderEvent
    */
   const OBJECT_RETURN_INSTANCE = 'enm.transformer.event.object.return_instance';
-
-  /**
-   * Throws \Enm\Transformer\Event\ConverterEvent
-   */
-  const CONVERT_TO_ARRAY = 'enm.transformer.event.convert.to_array';
-
-  /**
-   * Throws \Enm\Transformer\Event\ConverterEvent
-   */
-  const CONVERT_TO_OBJECT = 'enm.transformer.event.convert.to_object';
-
-  /**
-   * Throws \Enm\Transformer\Event\ConverterEvent
-   */
-  const CONVERT_TO_JSON = 'enm.transformer.event.convert.to_json';
-
-  /**
-   * Throws \Enm\Transformer\Event\ConverterEvent
-   */
-  const CONVERT_TO_PUBLIC = 'enm.transformer.event.convert.to_public';
-
-  /**
-   * Throws \Enm\Transformer\Event\ConverterEvent
-   */
-  const CONVERT_TO_STRING = 'enm.transformer.event.convert.to_string';
 }

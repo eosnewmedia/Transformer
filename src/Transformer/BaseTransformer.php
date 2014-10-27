@@ -94,7 +94,7 @@ abstract class BaseTransformer
   {
     $this->dispatcher           = $eventDispatcher;
     $this->global_configuration = $global_config;
-    $this->converter            = new EnmConverter($eventDispatcher);
+    $this->converter            = new EnmConverter();
     $this->normalizer           = new EnmNormalizer($this->converter);
     $this->eventHandler         = new EnmEventHandler($eventDispatcher, $this->getClassBuilder());
     $this->validator            = new EnmValidator($eventDispatcher, Validation::createValidator());

@@ -4,10 +4,7 @@
 namespace Enm\Transformer\Helpers;
 
 use Enm\Transformer\Enums\ConversionEnum;
-use Enm\Transformer\Events\ConverterEvent;
 use Enm\Transformer\Exceptions\TransformerException;
-use Enm\Transformer\TransformerEvents;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class EnmConverter
@@ -17,19 +14,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class EnmConverter
 {
-
-  /**
-   * @var EventDispatcherInterface
-   */
-  protected $dispatcher;
-
-
-
-  public function __construct(EventDispatcherInterface $dispatcher)
-  {
-    $this->dispatcher = $dispatcher;
-  }
-
 
 
   /**
@@ -435,33 +419,17 @@ class EnmConverter
    */
   public function convertTo($value, $result_type, array $exclude = array())
   {
-    $event = new ConverterEvent($value, $result_type);
     switch (strtolower($result_type))
     {
       case ConversionEnum::ARRAY_CONVERSION:
-        $this->dispatcher->dispatch(TransformerEvents::CONVERT_TO_ARRAY, $event);
-        $value = $event->getValue();
-
         return $this->toArray($value, $exclude);
       case ConversionEnum::STRING_CONVERSION:
-        $this->dispatcher->dispatch(TransformerEvents::CONVERT_TO_STRING, $event);
-        $value = $event->getValue();
-
         return $this->toString($value, $exclude);
       case ConversionEnum::JSON_CONVERSION:
-        $this->dispatcher->dispatch(TransformerEvents::CONVERT_TO_JSON, $event);
-        $value = $event->getValue();
-
         return $this->toJson($value, $exclude);
       case ConversionEnum::OBJECT_CONVERSION:
-        $this->dispatcher->dispatch(TransformerEvents::CONVERT_TO_OBJECT, $event);
-        $value = $event->getValue();
-
         return $this->toObject($value, $exclude, false);
       case ConversionEnum::PUBLIC_OBJECT_CONVERSION:
-        $this->dispatcher->dispatch(TransformerEvents::CONVERT_TO_PUBLIC, $event);
-        $value = $event->getValue();
-
         return $this->toObject($value, $exclude, true);
       default:
         throw new TransformerException(
