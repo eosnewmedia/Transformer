@@ -196,7 +196,7 @@ class EnmConverter
     switch (gettype($value))
     {
       case ConversionEnum::ARRAY_CONVERSION:
-        return $this->excludeFromArray(implode(', ', $value), $exclude);
+        return implode(', ', $this->excludeFromArray($value, $exclude));
       case ConversionEnum::STRING_CONVERSION:
         return $value;
       case ConversionEnum::OBJECT_CONVERSION:
