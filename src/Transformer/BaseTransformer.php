@@ -200,6 +200,8 @@ abstract class BaseTransformer
 
       $this->setGlobalValues($configurator->getConfig(), $params);
 
+      $params = GlobalTransformerValues::getInstance()->getParams();
+
       $returnClass = $this->build($returnClass, $configurator->getConfig(), $params);
 
       $this->destroy();
