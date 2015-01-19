@@ -38,7 +38,7 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
       $transformer = $this->getTransformer();
       $input       = new \stdClass('Invalid param');
       $transformer->transform(new \stdClass(), $config, array($key => $input));
-      $this->fail(sprintf('No exception thrown with invalid value (object) for %s.', $key));
+      $this->forcedFail();
     }
     catch (\Exception $e)
     {
@@ -59,7 +59,7 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
       $transformer = $this->getTransformer();
       $input       = array('Invalid param');
       $transformer->transform(new \stdClass(), $config, array($key => $input));
-      $this->fail(sprintf('No exception thrown with invalid value (array) for %s.', $key));
+      $this->forcedFail();
     }
     catch (\Exception $e)
     {
@@ -80,7 +80,7 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
       $transformer = $this->getTransformer();
       $input       = true;
       $transformer->transform(new \stdClass(), $config, array($key => $input));
-      $this->fail(sprintf('No exception thrown with invalid value (boolean) for %s.', $key));
+      $this->forcedFail();
     }
     catch (\Exception $e)
     {
@@ -101,7 +101,7 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
       $transformer = $this->getTransformer();
       $input       = 'Invalid param';
       $transformer->transform(new \stdClass(), $config, array($key => $input));
-      $this->fail(sprintf('No exception thrown with invalid value (string) for %s.', $key));
+      $this->forcedFail();
     }
     catch (\Exception $e)
     {
@@ -122,7 +122,7 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
       $transformer = $this->getTransformer();
       $input       = -2;
       $transformer->transform(new \stdClass(), $config, array($key => $input));
-      $this->fail(sprintf('No exception thrown with invalid value (negative integer) for %s.', $key));
+      $this->forcedFail();
     }
     catch (\Exception $e)
     {
@@ -143,7 +143,7 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
       $transformer = $this->getTransformer();
       $input       = 5;
       $transformer->transform(new \stdClass(), $config, array($key => $input));
-      $this->fail(sprintf('No exception thrown with invalid value (positive integer) for %s.', $key));
+      $this->forcedFail();
     }
     catch (\Exception $e)
     {
@@ -164,7 +164,7 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
       $transformer = $this->getTransformer();
       $input       = null;
       $transformer->transform(new \stdClass(), $config, array($key => $input));
-      $this->fail(sprintf('No exception thrown with invalid value (null) for %s.', $key));
+      $this->forcedFail();
     }
     catch (\Exception $e)
     {
@@ -185,7 +185,7 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
       $transformer = $this->getTransformer();
       $input       = 0;
       $transformer->transform(new \stdClass(), $config, array($key => $input));
-      $this->fail(sprintf('No exception thrown with invalid value (zero) for %s.', $key));
+      $this->forcedFail();
     }
     catch (\Exception $e)
     {
@@ -206,7 +206,7 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
       $transformer = $this->getTransformer();
       $input       = 3.5;
       $transformer->transform(new \stdClass(), $config, array($key => $input));
-      $this->fail(sprintf('No exception thrown with invalid value (zero) for %s.', $key));
+      $this->forcedFail();
     }
     catch (\Exception $e)
     {
@@ -227,7 +227,7 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
       $transformer = $this->getTransformer();
       $input       = -3.5;
       $transformer->transform(new \stdClass(), $config, array($key => $input));
-      $this->fail(sprintf('No exception thrown with invalid value (zero) for %s.', $key));
+      $this->forcedFail();
     }
     catch (\Exception $e)
     {
@@ -273,11 +273,30 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
       $params      = array($key => $unexpectedValue);
       $transformer->transform(new \stdClass(), $config, $params);
 
-      $this->fail('Invalid value does not force an exception.');
+      $this->forcedFail();
     }
     catch (\Exception $e)
     {
       $this->assertTrue(true);
     }
+  }
+
+
+
+  /**
+   * @param null $invalid_value
+   * @param null $key
+   */
+  protected function forcedFail($invalid_value = null, $key = null)
+  {
+    if ($invalid_value !== null)
+    {
+      $invalid_value = '(' . $invalid_value . ') ';
+    }
+    if ($key !== null)
+    {
+      $key = ' (Key: ' . $key . ')';
+    }
+    $this->fail('Invalid value ' . $invalid_value . 'does not force an exception.' . $key);
   }
 }

@@ -23,21 +23,28 @@ class Date extends Constraint
 
   public function __construct($options = null)
   {
-    if (is_array($options) && !isset($options['format']))
+    if (is_array($options))
     {
-      throw new ConstraintDefinitionException(
-        sprintf(
-          'The %s constraint requires the "format" option to be set.',
-          get_class($this)
-        )
-      );
+      if (!isset($options['format']))
+      {
+        throw new ConstraintDefinitionException(
+          sprintf(
+            'The %s constraint requires the "format" option to be set.',
+            get_class($this)
+          )
+        );
+      }
+      if (!is_array($options['format']))
+      {
+        throw new ConstraintDefinitionException(
+          sprintf(
+            'The Date constraint requires the "format" option to be an array.',
+            get_class($this)
+          )
+        );
+      }
     }
-    if (!is_array($options['format']))
-    {
-      throw new ConstraintDefinitionException(
-        'The Date constraint requires the "format" option to be an array.'
-      );
-    }
+
     parent::__construct($options);
   }
 
