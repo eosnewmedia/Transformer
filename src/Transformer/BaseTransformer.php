@@ -711,34 +711,40 @@ abstract class BaseTransformer
    * @return $this
    * @throws \Enm\Transformer\Exceptions\TransformerException
    */
-  protected function setLocalConfig($local_config)
+  protected function setLocalConfig($local_config = null)
   {
+    if (is_null($local_config))
+    {
+      $this->local_configuration = array();
+
+      return $this;
+    }
     try
     {
-      if (is_null($local_config))
-      {
-        $this->local_configuration = array();
-
-        return $this;
-      }
-      if ((is_string($local_config) && !json_decode($local_config) instanceof \stdClass))
-      {
-        if (!array_key_exists($local_config, $this->global_configuration))
-        {
-          throw new TransformerException('Config Key "' . $local_config . '" does not exists!');
-        }
-        $this->local_configuration = $this->global_configuration[$local_config];
-
-        $this->local_configuration['events'] = $this->setEventConfig($this->local_configuration['events']);
-
-        return $this;
-      }
-
-      $config = $this->converter->convertTo($local_config, 'array');
-      $key    = md5(time());
-
       $processor = new Processor();
-      $config    = $processor->processConfiguration(
+      $key       = md5(time());
+      $config    = array();
+
+      switch (gettype($local_config))
+      {
+        case ConversionEnum::STRING_CONVERSION:
+          if (!json_decode($local_config) instanceof \stdClass)
+          {
+            if (!array_key_exists($local_config, $this->global_configuration))
+            {
+              throw new TransformerException('Config Key "' . $local_config . '" does not exists!');
+            }
+            $config = $this->global_configuration[$local_config];
+            $key    = $local_config;
+          }
+          break;
+        case ConversionEnum::ARRAY_CONVERSION:
+          $config = $local_config;
+          break;
+        default:
+          $config = $this->converter->convertTo($local_config, 'array');
+      }
+      $config = $processor->processConfiguration(
         new TransformerConfiguration(),
         array('enm_transformer' => [$key => $config])
       );
