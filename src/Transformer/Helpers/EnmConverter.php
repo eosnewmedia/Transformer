@@ -15,11 +15,15 @@ use Enm\Transformer\Exceptions\TransformerException;
 class EnmConverter
 {
 
+  /**
+   * @var int
+   */
+  protected $level = 0;
 
   /**
-   * @var array
+   * @var int
    */
-  protected $objects = array();
+  protected $max_nesting_level = null;
 
 
 
@@ -27,13 +31,16 @@ class EnmConverter
    * @param mixed  $value
    * @param string $to
    * @param array  $exclude
+   * @param int    $max_nesting_level default value is 30
    *
    * @return mixed
    * @throws TransformerException
    */
-  public function convertTo($value, $to, array $exclude = array())
+  public function convertTo($value, $to, array $exclude = array(), $max_nesting_level = null)
   {
-    $this->objects = array();
+    $this->level             = 0;
+    $this->max_nesting_level = is_null($max_nesting_level) ? 30 : intval($max_nesting_level);
+
     switch (strtolower($to))
     {
       case ConversionEnum::ARRAY_CONVERSION:
@@ -244,25 +251,18 @@ class EnmConverter
       throw new TransformerException(sprintf('Value has to be an object, %s given.', gettype($value)));
     }
 
-    $object_hash = spl_object_hash($value);
-    if (!in_array($object_hash, $this->objects))
+    if ($value instanceof \DateTime)
     {
-      array_push($this->objects, $object_hash);
-      if ($value instanceof \DateTime)
-      {
-        return $value;
-      }
-      elseif ($value instanceof \stdClass)
-      {
-        return $this->arrayToObject((array) $value, $exclude);
-      }
-      else
-      {
-        return $this->preparePublicObject($value, $exclude);
-      }
+      return $value;
     }
-
-    return $object_hash;
+    elseif ($value instanceof \stdClass)
+    {
+      return $this->arrayToObject((array) $value, $exclude);
+    }
+    else
+    {
+      return $this->preparePublicObject($value, $exclude);
+    }
   }
 
 
@@ -316,7 +316,7 @@ class EnmConverter
     $properties = $reflection->getProperties();
 
     $object = new \stdClass();
-
+    $this->level++;
     foreach ($properties as $property)
     {
       $key = $property->getName();
@@ -327,14 +327,22 @@ class EnmConverter
 
         if (is_object($object->$key))
         {
-          $object->$key = $this->objectToPublicObject($object->$key, $this->excludeNext($key, $exclude));
+          if ($this->level <= $this->max_nesting_level)
+          {
+            $object->$key = $this->objectToPublicObject($object->$key, $this->excludeNext($key, $exclude));
+          }
+          else
+          {
+            $object->$key = null;
+          }
         }
-        if (is_array($object->$key))
+        elseif (is_array($object->$key))
         {
           $object->$key = $this->prepareArray($object->$key, $this->excludeNext($key, $exclude));
         }
       }
     }
+    $this->level--;
 
     return $object;
   }

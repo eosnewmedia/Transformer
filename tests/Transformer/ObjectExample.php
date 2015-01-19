@@ -96,7 +96,7 @@ class ObjectExample
 
 
   /**
-   * @return mixed
+   * @return ObjectExample|null
    */
   public function getChild()
   {

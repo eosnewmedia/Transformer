@@ -96,4 +96,33 @@ class ConverterTest extends BaseTransformerTestClass
       $this->fail($e);
     }
   }
+
+
+
+  public function testMaxNestingLevel()
+  {
+    try
+    {
+      $object = new ObjectExample();
+      $object->setChild(new ObjectExample());
+      $object->getChild()->setChild(new ObjectExample());
+      $object->getChild()->getChild()->setChild(new ObjectExample());
+      $object->getChild()->setA(new ObjectExample());
+      $object->getChild()->getA()->setChild(new ObjectExample());
+
+      $converted = $this->getTransformer()->convert($object, 'array', array(), 2);
+
+      $this->assertArrayHasKey('child', $converted);
+      $this->assertArrayHasKey('child', $converted['child']);
+      $this->assertArrayHasKey('child', $converted['child']['child']);
+      $this->assertArrayHasKey('a', $converted['child']);
+      $this->assertArrayHasKey('child', $converted['child']['a']);
+      $this->assertNull($converted['child']['child']['child']);
+      $this->assertNull($converted['child']['a']['child']);
+    }
+    catch (\Exception $e)
+    {
+      $this->fail($e);
+    }
+  }
 }

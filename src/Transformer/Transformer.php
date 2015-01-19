@@ -84,11 +84,12 @@ class Transformer extends BaseTransformer implements TransformerInterface
    * @param mixed  $value
    * @param string $to
    * @param array  $exclude
+   * @param int    $max_nesting_level default value is 30
    *
    * @return array|object|string
    */
-  public function convert($value, $to, array $exclude = array())
+  public function convert($value, $to, array $exclude = array(), $max_nesting_level = null)
   {
-    return $this->converter->convertTo($value, $to, $exclude);
+    return $this->converter->convertTo($value, $to, $exclude, $max_nesting_level);
   }
 }
