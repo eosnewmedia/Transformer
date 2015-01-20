@@ -4,6 +4,7 @@ namespace Enm\TransformerBundle\Tests\Helpers;
 
 use Enm\Transformer\BaseTransformerTestClass;
 use Enm\Transformer\Entities\Configuration;
+use Enm\Transformer\Entities\ConfigurationOptions;
 use Enm\Transformer\Entities\Parameter;
 use Enm\Transformer\Exceptions\TransformerException;
 use Enm\Transformer\Helpers\EnmValidator;
@@ -80,6 +81,32 @@ class EnmValidatorTest extends BaseTransformerTestClass
     catch (TransformerException $e)
     {
       $this->fail($e);
+    }
+  }
+
+
+
+  public function testForbidValueMethod()
+  {
+    try
+    {
+      $config = new Configuration('test');
+      $config->setType('array');
+
+      $param  = new Parameter('test', array());
+      $params = array('value' => 'value');
+
+      $options = new ConfigurationOptions();
+      $options->setForbiddenIfAvailable(array('value'));
+      $config->setOptions($options);
+
+      $validator = $this->getEnmValidator();
+      $validator->forbidValue($config, $param, $params);
+      $this->forcedFail();
+    }
+    catch (TransformerException $e)
+    {
+      $this->assertTrue(true);
     }
   }
 }

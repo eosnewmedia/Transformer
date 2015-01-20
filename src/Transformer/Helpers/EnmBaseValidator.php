@@ -105,9 +105,14 @@ abstract class EnmBaseValidator
 
     if ($violationList->count() > 0)
     {
+      $invalidValue = $violationList->get(0)->getInvalidValue();
+      if (is_array($invalidValue))
+      {
+        $invalidValue = '[' . implode(', ', $invalidValue) . ']';
+      }
       throw new TransformerException(
         'Key: ' . $parameter->getKey() . ' - ' . 'Value: '
-        . $violationList->get(0)->getInvalidValue() . ' - Error: '
+        . $invalidValue . ' - Error: '
         . $violationList->get(0)->getMessage()
       );
     }
