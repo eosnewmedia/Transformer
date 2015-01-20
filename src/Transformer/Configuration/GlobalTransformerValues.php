@@ -68,12 +68,19 @@ class GlobalTransformerValues
    */
   public static function getInstance()
   {
-    if (null === self::$instance)
+    if (!self::$instance instanceof self)
     {
       self::createNewInstance();
     }
 
     return self::$instance;
+  }
+
+
+
+  public static function destroy()
+  {
+    self::$instance = null;
   }
 
 

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Enm\Transformer\Configuration;
+namespace Enm\Transformer\Tests\Entities;
 
 use Enm\Transformer\Entities\Parameter;
 use Enm\Transformer\BaseTransformerTestClass;
