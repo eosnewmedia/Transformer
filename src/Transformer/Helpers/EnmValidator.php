@@ -13,6 +13,7 @@ use Enm\Transformer\Validation\ArrayConstraints\ArrayRegex;
 use Enm\Transformer\Validation\ArrayConstraints\EmptyArrayOrNull;
 use Enm\Transformer\Validation\ArrayConstraints\NotEmptyArray;
 use Enm\Transformer\Validation\DateConstraints\Date;
+use Enm\Transformer\Validation\IndividualConstraints\Individual;
 use Symfony\Component\Validator\Constraints;
 
 class EnmValidator extends EnmBaseValidator
@@ -58,7 +59,7 @@ class EnmValidator extends EnmBaseValidator
         $this->validateIndividual($configuration, $parameter);
         break;
     }
-    $this->validateConstrains($this->getConstraints(), $parameter);
+    $this->validateConstraints($this->getConstraints(), $parameter);
     $this->clearConstraints();
     $this->dispatcher->dispatch(
       TransformerEvents::AFTER_VALIDATION,
@@ -337,6 +338,7 @@ class EnmValidator extends EnmBaseValidator
    */
   protected function validateIndividual(Configuration $configuration, Parameter $parameter)
   {
+    $this->addConstraint(new Individual());
     $this->dispatcher->dispatch(
       TransformerEvents::VALIDATE_INDIVIDUAL,
       new ValidatorEvent($configuration, $parameter, $this)

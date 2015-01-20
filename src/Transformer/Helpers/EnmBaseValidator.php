@@ -61,7 +61,7 @@ abstract class EnmBaseValidator
 
 
   /**
-   * @return array
+   * @return Constraint[]
    */
   public function getConstraints()
   {
@@ -83,19 +83,18 @@ abstract class EnmBaseValidator
 
 
   /**
-   * @param array     $constraints
-   * @param Parameter $parameter
+   * @param Constraint[] $constraints
+   * @param Parameter    $parameter
    *
    * @throws TransformerException
    */
-  public function validateConstrains(array $constraints, Parameter $parameter)
+  public function validateConstraints(array $constraints, Parameter $parameter)
   {
     try
     {
       $violationList = $this->validator->validate(
         $parameter->getValue(),
-        $constraints,
-        array(Constraint::PROPERTY_CONSTRAINT, Constraint::DEFAULT_GROUP)
+        $constraints
       );
     }
     catch (\Exception $e)
@@ -117,6 +116,20 @@ abstract class EnmBaseValidator
 
 
   /**
+   * @param Constraint[] $constraints
+   * @param Parameter    $parameter
+   *
+   * @throws TransformerException
+   * @deprecated will be removed in version 1.0
+   */
+  public function validateConstrains(array $constraints, Parameter $parameter)
+  {
+    $this->validateConstraints($constraints, $parameter);
+  }
+
+
+
+  /**
    * @param \Exception $e
    * @param Parameter  $parameter
    *
@@ -126,10 +139,10 @@ abstract class EnmBaseValidator
   {
     $violation = new ConstraintViolation(
       $e->getMessage(), $e->getMessage(), array(
-        $e->getCode(),
-        $e->getFile(),
-        $e->getLine()
-      ), $parameter->getValue(), null, $parameter->getValue()
+      $e->getCode(),
+      $e->getFile(),
+      $e->getLine()
+    ), $parameter->getValue(), null, $parameter->getValue()
     );
 
     return new ConstraintViolationList(array($violation));

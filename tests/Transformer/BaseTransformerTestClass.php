@@ -299,4 +299,16 @@ class BaseTransformerTestClass extends \PHPUnit_Framework_TestCase
     }
     $this->fail('Invalid value ' . $invalid_value . 'does not force an exception.' . $key);
   }
+
+
+
+  /**
+   * @return \PHPUnit_Framework_MockObject_MockObject
+   */
+  protected function getValidatorExecutionContext()
+  {
+    return $this->getMockBuilder('Symfony\Component\Validator\ExecutionContext')
+                ->disableOriginalConstructor()
+                ->getMock();
+  }
 }
