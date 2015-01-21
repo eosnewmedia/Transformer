@@ -2,6 +2,8 @@
 namespace Enm\TransformerBundle\Tests\Converter;
 
 use Enm\Transformer\BaseTransformerTestClass;
+use Enm\Transformer\Enums\ConversionEnum;
+use Enm\Transformer\Helpers\EnmConverter;
 use Enm\Transformer\ObjectExample;
 
 class ConverterTest extends BaseTransformerTestClass
@@ -119,6 +121,38 @@ class ConverterTest extends BaseTransformerTestClass
       $this->assertArrayHasKey('child', $converted['child']['a']);
       $this->assertNull($converted['child']['child']['child']);
       $this->assertNull($converted['child']['a']['child']);
+    }
+    catch (\Exception $e)
+    {
+      $this->fail($e);
+    }
+  }
+
+
+
+  public function testConverter()
+  {
+    try
+    {
+      $object = new ObjectExample();
+      $object->setChild(new ObjectExample());
+      $object->getChild()->setChild(new ObjectExample());
+      $object->getChild()->getChild()->setChild(new ObjectExample());
+
+      $converter = new EnmConverter();
+
+      $value = $converter->convertTo($object, ConversionEnum::ARRAY_CONVERSION);
+      $converter->convertTo($value, ConversionEnum::OBJECT_CONVERSION);
+      $converter->convertTo($value, ConversionEnum::STRING_CONVERSION);
+
+      $value = $converter->convertTo($object, ConversionEnum::STRING_CONVERSION);
+      $converter->convertTo($value, ConversionEnum::STRING_CONVERSION);
+
+      $value = $converter->convertTo($object, ConversionEnum::PUBLIC_OBJECT_CONVERSION);
+      $converter->convertTo($value, ConversionEnum::JSON_CONVERSION);
+
+      $value = $converter->convertTo($object, ConversionEnum::JSON_CONVERSION);
+      $converter->convertTo($value, ConversionEnum::OBJECT_CONVERSION);
     }
     catch (\Exception $e)
     {

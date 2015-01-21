@@ -174,7 +174,7 @@ class EnmConverter
     switch (gettype($value))
     {
       case ConversionEnum::ARRAY_CONVERSION:
-        return implode(',', $this->prepareArray($value, $exclude));
+        return $this->arrayToString($this->prepareArray($value, $exclude));
       case ConversionEnum::STRING_CONVERSION:
         return $value;
       case ConversionEnum::OBJECT_CONVERSION:
@@ -192,6 +192,27 @@ class EnmConverter
         gettype($value)
       )
     );
+  }
+
+
+
+  protected function arrayToString(array $array)
+  {
+    $array  = array_values($array);
+    $string = '';
+    for ($i = 1; $i <= count($array); $i++)
+    {
+      if (!empty($array[$i]))
+      {
+        $string .= $this->toString($array[$i], array());
+        if ($i < count($array))
+        {
+          $string .= ', ';
+        }
+      }
+    }
+
+    return $string;
   }
 
 

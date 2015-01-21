@@ -4,6 +4,7 @@ namespace Enm\TransformerBundle\Tests\Entities;
 use Enm\Transformer\BaseTransformerTestClass;
 use Enm\Transformer\Entities\Configuration;
 use Enm\Transformer\Entities\ConfigurationOptions;
+use Enm\Transformer\Entities\RequireIfOption;
 
 class ConfigurationTest extends BaseTransformerTestClass
 {
@@ -44,6 +45,16 @@ class ConfigurationTest extends BaseTransformerTestClass
       $configuration->getOptions();
       $configuration->getEvents();
       $configuration->getChildren();
+
+      $requiredIf = new RequireIfOption();
+      $requiredIf->setAnd(array());
+      $requiredIf->setOr(array());
+      $requiredIf->getAnd();
+      $requiredIf->getOr();
+
+      $configOption = new ConfigurationOptions();
+      $configOption->setOptions(array());
+      $configOption->getOptions();
 
       $this->assertTrue(true);
     }
