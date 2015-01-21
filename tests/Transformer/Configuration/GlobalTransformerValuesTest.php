@@ -1,5 +1,5 @@
 <?php
-namespace Enm\TransformerBundle\Tests\Entities;
+namespace Enm\TransformerBundle\Tests\Configuration;
 
 use Enm\Transformer\BaseTransformerTestClass;
 use Enm\Transformer\Configuration\GlobalTransformerValues;
