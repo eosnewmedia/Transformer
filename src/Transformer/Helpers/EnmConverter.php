@@ -198,14 +198,15 @@ class EnmConverter
 
   protected function arrayToString(array $array)
   {
-    $array  = array_values($array);
-    $string = '';
-    for ($i = 1; $i <= count($array); $i++)
+    $array       = array_values($array);
+    $array_count = count($array);
+    $string      = '';
+    for ($i = 1; $i <= $array_count; $i++)
     {
       if (!empty($array[$i]))
       {
         $string .= $this->toString($array[$i], array());
-        if ($i < count($array))
+        if ($i < $array_count)
         {
           $string .= ', ';
         }
