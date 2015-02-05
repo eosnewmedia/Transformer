@@ -17,6 +17,8 @@ abstract class PhpVersionNormalizer
       {
         return (bool) $var;
       }
+
+      throw new \Exception(implode(', ', get_defined_functions()));
     }
   }
 }
