@@ -3,18 +3,10 @@
 
 namespace Enm\Transformer\Entities;
 
-use Enm\Transformer\Helpers\PhpVersionNormalizer;
 use Enm\Transformer\Interfaces\ConfigurationOptionInterface;
 
-class ConfigurationOptions extends PhpVersionNormalizer implements ConfigurationOptionInterface
+class ConfigurationOptions implements ConfigurationOptionInterface
 {
-
-  public function __construct()
-  {
-    parent::__construct();
-  }
-
-
 
   /**
    * @var bool
