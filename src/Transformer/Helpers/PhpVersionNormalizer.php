@@ -11,17 +11,22 @@ abstract class PhpVersionNormalizer
    */
   public function __construct()
   {
+    $this->addBoolval();
+  }
+
+
+
+  protected function addBoolval()
+  {
     if (!function_exists('boolval'))
     {
-      try
+      $functions = get_defined_functions();
+      if (!in_array('boolval', $functions))
       {
         function boolval($var)
         {
           return (bool) $var;
         }
-      }
-      catch (\Exception $e)
-      {
       }
     }
   }
