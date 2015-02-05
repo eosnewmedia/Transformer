@@ -18,15 +18,11 @@ abstract class PhpVersionNormalizer
 
   protected function addBoolval()
   {
-    if (!function_exists('boolval'))
+    if (!function_exists('boolval') && !function_exists(__NAMESPACE__ . '\boolval'))
     {
-      $functions = get_defined_functions();
-      if (!in_array('boolval', $functions))
+      function boolval($var)
       {
-        function boolval($var)
-        {
-          return (bool) $var;
-        }
+        return (bool) $var;
       }
     }
   }
