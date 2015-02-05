@@ -8,7 +8,7 @@ use Enm\Transformer\Entities\Parameter;
 use Enm\Transformer\Enums\TypeEnum;
 use Enm\Transformer\Exceptions\TransformerException;
 
-class EnmNormalizer
+class EnmNormalizer extends PhpVersionNormalizer
 {
 
   /**
@@ -23,6 +23,7 @@ class EnmNormalizer
    */
   public function __construct(EnmConverter $converter)
   {
+    parent::__construct();
     $this->converter = $converter;
   }
 

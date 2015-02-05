@@ -77,7 +77,9 @@ abstract class BaseTransformer
    */
   protected $local_configuration = array();
 
-
+  /**
+   * @var EnmEventHandler
+   */
   protected $eventHandler;
 
 
