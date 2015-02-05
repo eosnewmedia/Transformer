@@ -37,7 +37,7 @@
   ],
   "minimum-stability": "stable",
   "require":           {
-    "php":                      ">=5.5",
+    "php":                      ">=5.4",
     "symfony/config":           ">=2.2",
     "symfony/event-dispatcher": ">=2.1",
     "symfony/validator":        ">=2.5"
