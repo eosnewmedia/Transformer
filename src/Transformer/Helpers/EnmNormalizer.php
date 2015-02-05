@@ -71,7 +71,7 @@ class EnmNormalizer
     {
       $value = ($parameter->getValue() === 'true') ? true : $parameter->getValue();
       $value = ($parameter->getValue() === 'false') ? false : $value;
-      $value = boolval($value);
+      $value = EnmPhpNormalizer::boolval($value);
       $parameter->setValue($value);
     }
   }

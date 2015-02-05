@@ -48,7 +48,6 @@
   "autoload": {
     "psr-4": {
       "Enm\\Transformer\\": "src/Transformer"
-    },
-    "files": ["src/Transformer/global-functions.inc.php"]
+    }
   }
 }

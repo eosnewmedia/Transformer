@@ -3,6 +3,7 @@
 
 namespace Enm\Transformer\Entities;
 
+use Enm\Transformer\Helpers\EnmPhpNormalizer;
 use Enm\Transformer\Interfaces\ConfigurationOptionInterface;
 
 class ConfigurationOptions implements ConfigurationOptionInterface
@@ -135,7 +136,7 @@ class ConfigurationOptions implements ConfigurationOptionInterface
    */
   public function setAssociative($associative)
   {
-    $this->associative = boolval($associative);
+    $this->associative = EnmPhpNormalizer::boolval($associative);
 
     return $this;
   }
@@ -183,7 +184,7 @@ class ConfigurationOptions implements ConfigurationOptionInterface
    */
   public function setConvertToObject($convert_to_object)
   {
-    $this->convert_to_object = boolval($convert_to_object);
+    $this->convert_to_object = EnmPhpNormalizer::boolval($convert_to_object);
 
     return $this;
   }
@@ -383,7 +384,7 @@ class ConfigurationOptions implements ConfigurationOptionInterface
    */
   public function setRequired($required)
   {
-    $this->required = boolval($required);
+    $this->required = EnmPhpNormalizer::boolval($required);
 
     return $this;
   }
@@ -517,7 +518,7 @@ class ConfigurationOptions implements ConfigurationOptionInterface
    */
   public function setStrong($strong)
   {
-    $this->strong = boolval($strong);
+    $this->strong = EnmPhpNormalizer::boolval($strong);
 
     return $this;
   }
@@ -613,7 +614,7 @@ class ConfigurationOptions implements ConfigurationOptionInterface
    */
   public function setCeil($ceil)
   {
-    $this->ceil = boolval($ceil);
+    $this->ceil = EnmPhpNormalizer::boolval($ceil);
 
     return $this;
   }
@@ -637,7 +638,7 @@ class ConfigurationOptions implements ConfigurationOptionInterface
    */
   public function setFloor($floor)
   {
-    $this->floor = boolval($floor);
+    $this->floor = EnmPhpNormalizer::boolval($floor);
 
     return $this;
   }
