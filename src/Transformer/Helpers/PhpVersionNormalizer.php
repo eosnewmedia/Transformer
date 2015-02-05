@@ -13,11 +13,15 @@ abstract class PhpVersionNormalizer
   {
     if (!function_exists('boolval'))
     {
-      namespace {
+      try
+      {
         function boolval($var)
         {
           return (bool) $var;
         }
+      }
+      catch (\Exception $e)
+      {
       }
     }
   }
