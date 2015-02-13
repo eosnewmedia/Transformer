@@ -11,6 +11,10 @@ namespace Enm\Transformer\Interfaces;
 interface TransformerInterface
 {
 
+  const BUILD_ARRAY = 'array';
+
+
+
   /**
    * This method transforms an array, an object or a json into the needed format.
    * It will validate the structure and the values with reference to a given configuration array.

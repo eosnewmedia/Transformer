@@ -3,15 +3,13 @@
 
 namespace Enm\Transformer;
 
-use Enm\Transformer\Interfaces\TransformerInterface;
-
 /**
  * Class Transformer
  *
  * @package Enm\Transformer
  * @author  Philipp Marien <marien@eosnewmedia.de>
  */
-class Transformer extends BaseTransformer implements TransformerInterface
+class Transformer extends BaseTransformer
 {
 
   /**

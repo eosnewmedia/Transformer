@@ -19,6 +19,7 @@ use Enm\Transformer\Helpers\EnmConverter;
 use Enm\Transformer\Helpers\EnmEventHandler;
 use Enm\Transformer\Helpers\EnmNormalizer;
 use Enm\Transformer\Helpers\EnmValidator;
+use Enm\Transformer\Interfaces\TransformerInterface;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Validator\Validation;
@@ -30,10 +31,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @package Enm\Transformer
  * @author  Philipp Marien <marien@eosnewmedia.de>
  */
-abstract class BaseTransformer
+abstract class BaseTransformer implements TransformerInterface
 {
-
-  const BUILD_ARRAY = 'array';
 
   /**
    * @var \Enm\Transformer\Helpers\EnmClassBuilder
