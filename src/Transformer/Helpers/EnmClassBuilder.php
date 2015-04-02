@@ -182,7 +182,7 @@ class EnmClassBuilder
   protected function setPropertyValue($returnClass, $key, $value)
   {
     $setter = $this->getSetter($key);
-    if ($key !== null && method_exists($returnClass, $setter))
+    if ($value !== null && method_exists($returnClass, $setter))
     {
       $returnClass->{$setter}($value);
 
