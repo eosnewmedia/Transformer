@@ -18,7 +18,7 @@ class RequireIfOption
 
 
 
-  function __construct(array $or = array(), array $and = array())
+  public function __construct(array $or = array(), array $and = array())
   {
     $this->or  = $or;
     $this->and = $and;
