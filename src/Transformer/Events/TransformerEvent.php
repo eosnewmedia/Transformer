@@ -22,7 +22,7 @@ class TransformerEvent extends ConfigurationEvent
 
 
 
-  function __construct(Configuration $configuration, Parameter $parameter)
+  public function __construct(Configuration $configuration, Parameter $parameter)
   {
     $this->parameter = $parameter;
     parent::__construct($configuration);

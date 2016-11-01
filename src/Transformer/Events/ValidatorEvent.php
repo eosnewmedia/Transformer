@@ -20,7 +20,7 @@ class ValidatorEvent extends TransformerEvent
 
 
 
-  function __construct(Configuration $configuration, Parameter $parameter, $validator)
+  public function __construct(Configuration $configuration, Parameter $parameter, $validator)
   {
     $this->validator = $validator;
     parent::__construct($configuration, $parameter);
